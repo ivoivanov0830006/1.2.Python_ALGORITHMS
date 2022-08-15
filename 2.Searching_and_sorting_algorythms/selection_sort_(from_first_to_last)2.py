@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 5d90322e92cf5a9f6b703ec6681827fedab9577b
 nums = [int(x) for x in input().split()]
 
 for idx in range(len(nums)):
