@@ -1,0 +1,46 @@
+from collections import deque
+# bfs(node)   {
+#    queue  <-   node
+#    visited[node] = True
+#    while queue not empty
+#        v <- queue
+#        print v
+#        for each child c of v
+#            if not visited[c]
+#                queue <- c
+#                visited[c] = true
+# }
+
+
+def bfs(node, graph, visited):
+    if node in visited:
+        return
+    queue = deque([node])
+    visited.add(node)
+
+    while queue:
+        current_node = queue.popleft()
+        print(current_node, end=" ")
+
+        for child in graph[current_node]:
+            if child not in visited:
+                visited.add(child)
+                queue.append(child)
+
+
+graph = {
+    7: [19, 21, 14],           #               7
+    19: [7, 12, 31, 21],       #            /  |  \
+    1: [7],                    #          V    V   V
+    12: [],                    #        19 -> 21 -> 14
+    31: [21],                  #      / | \  ^ ^  /  \
+    21: [14],                  #     V  V  V /  \V    V
+    14: [6, 23],               #     1  12  31  23    6
+    6: [],
+    23: [21]
+}
+
+visited = set()
+
+for node in graph:
+    bfs(node, graph, visited)
