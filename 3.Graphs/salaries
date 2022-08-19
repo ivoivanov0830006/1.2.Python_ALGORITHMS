@@ -1,0 +1,78 @@
+def dfs(node, graph, salaries):
+    if salaries[node] is not None:
+        return salaries[node]
+    if len(graph[node]) == 0:
+        salaries[node] = 1
+        return 1
+    salary = 0
+    for child in graph[node]:
+        salary += dfs(child, graph, salaries)
+
+    salaries[node] = salary
+    return salary
+
+
+nodes = int(input())
+graph = []
+
+for _ in range(nodes):
+    line = input()
+    children = []
+    for idx, state in enumerate(line):
+        if state == "Y":
+            children.append(idx)
+    graph.append(children)
+
+salaries = [None] * nodes
+
+result = 0
+for node in range(nodes):
+    salary = dfs(node, graph, salaries)
+    result += salary
+
+print(result)
+
+# We have a hierarchy between the employees in a company.
+# Employees can have one or several direct managers. People who manage nobody are called REGULAR
+# employees and their salaries are 1. People who manage at least one employee are called MANAGERS.
+# Each manager takes a salary which is equal to the sum of the salaries of their directly managed employees.
+# Managers cannot manage directly or indirectly themselves. Some employees might have no manager.
+# See a sample hierarchy in a company along with the salaries computed following the above-described rule:
+#
+#           -----------
+#          /  (4)4     \                    (0) - REGULAR - salary = 1
+#         |  /   \      \                   (3) - REGULAR - salary = 1
+#         V V     V      \                  (1) - MANAGER - salary = 3 + 2 + 1 = 6 (sum of 2, 5 and 0)
+#         1(0)<- (2)3 <- (1)6               (2) - MANAGER - salary = 2 + 1 = 3 (sum of 5 and 0)
+#            \           /                  (4) - MANAGER - salary = 3 + 1 = 4 (sum of 2 and 0)
+#             \         /                   (5) - MANAGER - salary = 1 + 1 = 2 (sum of 3 and 0)
+#              ->(5)2<-
+#                 |
+#                 V
+#                (3)1
+#
+# In the above example, employees 0 and 3 are regular employees and take salary 1.
+# All others are managers and take the sum of the salaries of their directly managed employees.
+# For example, manager 1 takes salary 3 + 2 + 1 = 6 (sum of the salaries of employees 2, 5 and 0).
+# In the above example employees, 4 and 1 have no manager.
+# If we have N employees, they will be indexed from 0 to N – 1. For each employee, you will be given
+# a string with N symbols. The symbols are either 'Y' or 'N', showing all employees that are managed
+# by the current employee.
+# Input
+#   - On the first line, you will be given an integer N.
+#   - On the next N lines, you will be given strings with N symbols (either 'Y' or 'N').
+#   - The input data will always be valid and in the format described. There is no need to check it explicitly.
+# Output
+#   - Print the sum of the salaries of all employees.
+# Constraints
+#   - N will be an integer in the range [1 … 50].
+#   - If employee A is the manager of employee B, B will not be a manager of A.
+# Input                         Output
+# 6                             17               VERTICAL
+# NNNNNN                                        0 1 2 3 4 5     HOR  VER
+# YNYNNY                                      0 * N N N N N      0 -> 0     *
+# YNNNNY                                      1 Y * Y N N Y      1 -> 0     Y
+# NNNNNN                           HORIZONTAL 2 Y N * N N Y      5 -> 3     Y
+# YNYNNN                                      3 N N N * N N      4 -> 1     N
+# YNNYNN                                      4 Y N Y N * N
+#                                             5 Y N N Y N *
